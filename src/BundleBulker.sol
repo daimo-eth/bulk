@@ -9,8 +9,7 @@ import "./IInflator.sol";
  * Lets anyone register a new inflator.
  */
 contract BundleBulker {
-    // IEntryPoint public constant entryPoint =
-    //     IEntryPoint(0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789);
+    address public constant ENTRY_POINT = 0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789;
 
     mapping(uint32 => address) public idToInflator;
     mapping(address => uint32) public inflatorToID;
@@ -25,19 +24,15 @@ contract BundleBulker {
         inflatorToID[inflator] = inflatorId;
     }
 
-    function bulk(bytes calldata compressed) public view returns (bytes memory inflated) {
+    function bulk(bytes calldata compressed) public view returns (UserOperation[] memory ops, address payable beneficiary) {
         uint32 inflatorID = uint32(bytes4(compressed[0:4]));
         address inflator = idToInflator[inflatorID];
         require(inflator != address(0), "Inflator not registered");
-        return (IInflator(inflator).inflate(compressed));
+        return IInflator(inflator).inflate(compressed);
     }
 
-    // function submit(bytes calldata compressed) public {
-    //     uint32 inflatorID = uint32(bytes4(compressed[0:4]));
-    //     address inflator = idToInflator[inflatorID];
-    //     require(inflator != address(0), "Inflator not registered");
-    //     bytes memory inflated = IInflator(inflator).inflate(compressed);
-    //     entryPoint.submit(inflated);
-    // }
-    
+    function submit(bytes calldata compressed) public {
+        (UserOperation[] memory ops, address payable beneficiary) = bulk(compressed);
+        IEntryPoint(ENTRY_POINT).handleOps(ops, beneficiary);
+    }
 }
