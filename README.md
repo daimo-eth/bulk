@@ -1,66 +1,39 @@
-## Foundry
+## Bulk
 
-**Foundry is a blazing fast, portable and modular toolkit for Ethereum application development written in Rust.**
+**Make compressed 4337 bundles swole again.**
 
-Foundry consists of:
+Bulk makes 4337 on L2 cheaper. Bundlers can pass compressed bundles to `BundleBulker`, which decompresses them before calling the 4337 EntryPoint contract. This reduces L1 data usage, the dominant cost of rollup transactions.
 
--   **Forge**: Ethereum testing framework (like Truffle, Hardhat and DappTools).
--   **Cast**: Swiss army knife for interacting with EVM smart contracts, sending transactions and getting chain data.
--   **Anvil**: Local Ethereum node, akin to Ganache, Hardhat Network.
--   **Chisel**: Fast, utilitarian, and verbose solidity REPL.
+For example, here's a single USDC transfer executed as as a one-op bundle.
 
-## Documentation
+Before: [**1.6kb**](https://twitter.com/adietrichs/status/1725280716290773117)
 
-https://book.getfoundry.sh/
+After: [**353b**](https://docs.google.com/spreadsheets/d/1rf3AJMmm9BCkBsmQiRq4yP3Zhne9vIW-ib0Dp4QD2Tw/edit)
 
-## Usage
+## Details
 
-### Build
+Decompression happens via arbitrary contracts that implement `IInflator`. This lets bundlers or individual applications can define their own templates or decompression algorithms. Inflators can be stateful for greater savings.
 
-```shell
-$ forge build
+A bundler supports compression as follows:
+- client submits compressed op
+- bundler inflates, validates as usual
+- bundler submits compressed
+
+**Compression is independent from the security of the contract account being called.** The same userops go to the EntryPoint either way, validation and execution identical--this is just an optimization to use less calldata.
+
+Bulk is intended for use directly by bundlers, eg with API keys--so griefing can be mitigated offchain. The userop mempool remains important for censorship resistance, and apps can continue to submit uncompressed ops to mempool as a fallback if a direct bundler API is unavailable.
+
+
+## Quick start
+
+**Proof of concept. In active development.**
+
+```
+git clone git@github.com:daimo-eth/bulk --recurse-submodules
+foundryup
 ```
 
-### Test
-
-```shell
-$ forge test
+```
+forge test
 ```
 
-### Format
-
-```shell
-$ forge fmt
-```
-
-### Gas Snapshots
-
-```shell
-$ forge snapshot
-```
-
-### Anvil
-
-```shell
-$ anvil
-```
-
-### Deploy
-
-```shell
-$ forge script script/Counter.s.sol:CounterScript --rpc-url <your_rpc_url> --private-key <your_private_key>
-```
-
-### Cast
-
-```shell
-$ cast <subcommand>
-```
-
-### Help
-
-```shell
-$ forge --help
-$ anvil --help
-$ cast --help
-```

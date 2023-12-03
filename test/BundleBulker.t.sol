@@ -76,6 +76,5 @@ contract BundleBulkerTest is Test {
         assertEq(op.preVerificationGas, 8078499);
         assertEq(op.maxFeePerGas, 1000050);
         assertEq(op.maxPriorityFeePerGas, 1000000);
-
     }
 }
