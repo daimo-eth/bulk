@@ -5,6 +5,7 @@ import {Test, console2} from "forge-std/Test.sol";
 import {UserOperation} from "account-abstraction/interfaces/IEntryPoint.sol";
 
 import {BundleBulker} from "../src/BundleBulker.sol";
+import {IInflator} from "../src/IInflator.sol";
 import {DaimoTransferInflator} from "../src/DaimoTransferInflator.sol";
 
 contract BundleBulkerTest is Test {
@@ -37,6 +38,18 @@ contract BundleBulkerTest is Test {
     }
 
     function test_Inflate() public {
+        DummyInflator d = new DummyInflator();
+        b.registerInflator(77, address(d));
+
+        bytes memory compressed = abi.encodePacked(uint32(77), address(0x999));
+        (UserOperation[] memory ops, address payable beneficiary) = b.inflate(
+            compressed
+        );
+        assertEq(beneficiary, payable(address(0x999)));
+        assertEq(ops.length, 0);
+    }
+
+    function test_DaimoTransferInflator() public {
         address payable alice = payable(
             0x43370330BE39D388f6219d8241dC1f76Fb9DF268
         );
@@ -129,5 +142,18 @@ contract BundleBulkerTest is Test {
                 hex"000000000000"
             )
         );
+    }
+}
+
+contract DummyInflator is IInflator {
+    function inflate(bytes calldata compressed)
+        external
+        override
+        pure
+        returns (UserOperation[] memory ops, address payable beneficiary)
+    {
+        assert(compressed.length == 20);
+        ops = new UserOperation[](0);
+        beneficiary = payable(address(bytes20(compressed[0:20])));
     }
 }

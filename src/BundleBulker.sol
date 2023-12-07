@@ -24,15 +24,15 @@ contract BundleBulker {
         inflatorToID[inflator] = inflatorId;
     }
 
-    function bulk(bytes calldata compressed) public view returns (UserOperation[] memory ops, address payable beneficiary) {
+    function inflate(bytes calldata compressed) public view returns (UserOperation[] memory ops, address payable beneficiary) {
         uint32 inflatorID = uint32(bytes4(compressed[0:4]));
         address inflator = idToInflator[inflatorID];
         require(inflator != address(0), "Inflator not registered");
-        return IInflator(inflator).inflate(compressed);
+        return IInflator(inflator).inflate(compressed[4:]);
     }
 
     function submit(bytes calldata compressed) public {
-        (UserOperation[] memory ops, address payable beneficiary) = bulk(compressed);
+        (UserOperation[] memory ops, address payable beneficiary) = inflate(compressed);
         IEntryPoint(ENTRY_POINT).handleOps(ops, beneficiary);
     }
 }
