@@ -12,8 +12,9 @@ contract DaimoTransferInflator is IInflator, Ownable {
     address payable public beneficiary;
     address public paymaster;
 
-    constructor(address _coinAddr) {
+    constructor(address _coinAddr, address _owner) {
         coinAddr = _coinAddr;
+        transferOwnership(_owner);
     }
 
     function setBeneficiary(address payable _beneficiary) public onlyOwner {

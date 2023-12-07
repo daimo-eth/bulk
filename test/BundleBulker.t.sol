@@ -41,8 +41,10 @@ contract BundleBulkerTest is Test {
             0x43370330BE39D388f6219d8241dC1f76Fb9DF268
         );
         DaimoTransferInflator t = new DaimoTransferInflator(
-            address(0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913)
+            address(0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913),
+            alice
         );
+        vm.prank(alice);
         t.setBeneficiary(alice);
 
         bytes memory compressed = abi.encodePacked(

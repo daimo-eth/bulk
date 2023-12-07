@@ -98,7 +98,10 @@ export const daimoTransferInflatorABI = [
   {
     stateMutability: 'nonpayable',
     type: 'constructor',
-    inputs: [{ name: '_coinAddr', internalType: 'address', type: 'address' }],
+    inputs: [
+      { name: '_coinAddr', internalType: 'address', type: 'address' },
+      { name: '_owner', internalType: 'address', type: 'address' },
+    ],
   },
   {
     stateMutability: 'view',
@@ -161,6 +164,13 @@ export const daimoTransferInflatorABI = [
     outputs: [{ name: '', internalType: 'address', type: 'address' }],
   },
   {
+    stateMutability: 'view',
+    type: 'function',
+    inputs: [],
+    name: 'paymaster',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
     stateMutability: 'nonpayable',
     type: 'function',
     inputs: [],
@@ -178,6 +188,13 @@ export const daimoTransferInflatorABI = [
       },
     ],
     name: 'setBeneficiary',
+    outputs: [],
+  },
+  {
+    stateMutability: 'nonpayable',
+    type: 'function',
+    inputs: [{ name: '_paymaster', internalType: 'address', type: 'address' }],
+    name: 'setPaymaster',
     outputs: [],
   },
   {

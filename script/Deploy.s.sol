@@ -28,7 +28,7 @@ contract DeployScript is Script {
         }
 
         vm.startBroadcast();
-        DaimoTransferInflator i = new DaimoTransferInflator{salt:0}(tokenAddress);
+        DaimoTransferInflator i = new DaimoTransferInflator{salt:0}(tokenAddress, msg.sender);
         i.setBeneficiary(beneficiary);
         i.setPaymaster(paymaster);
         vm.stopBroadcast();
