@@ -68,9 +68,9 @@ contract BundleBulkerTest is Test {
             hex"0000000f4240", // maxPriorityFeePerGas
             hex"a1b349c566c44769888948adc061abcdb54497f7", // to
             hex"0000000f4240", // amount
+            hex"99", // paymaster sig v
             hex"7777777777777777777777777777777777777777777777777777777777777777", // paymaster sig r
             hex"8888888888888888888888888888888888888888888888888888888888888888", // paymaster sig s
-            hex"99", // paymaster sig v
             hex"0100006553c75f00", // sig version, validUntil, keySlot
             hex"ce1a2a89ec9d3cecd1e9fd65808d85702d7f8681d42ce8f0982363a362b87bd5", // sig r
             hex"498c72f497f9d27ae895c6d2c10a73e85b73d258371d2322c80ca5bfad242f5f", // sig s
@@ -116,9 +116,9 @@ contract BundleBulkerTest is Test {
         assertEq(
             op.paymasterAndData,
             hex"6f0F82fAFac7B5D8C269B02d408F094bAC6CF877"
+            hex"99"
             hex"7777777777777777777777777777777777777777777777777777777777777777"
             hex"8888888888888888888888888888888888888888888888888888888888888888"
-            hex"99"
             hex"00006553c75f"
         );
         assertEq(
