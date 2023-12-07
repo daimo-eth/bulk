@@ -13,8 +13,15 @@ export const bundleBulkerABI = [
   {
     stateMutability: 'view',
     type: 'function',
+    inputs: [{ name: '', internalType: 'uint32', type: 'uint32' }],
+    name: 'idToInflator',
+    outputs: [{ name: '', internalType: 'address', type: 'address' }],
+  },
+  {
+    stateMutability: 'view',
+    type: 'function',
     inputs: [{ name: 'compressed', internalType: 'bytes', type: 'bytes' }],
-    name: 'bulk',
+    name: 'inflate',
     outputs: [
       {
         name: 'ops',
@@ -52,13 +59,6 @@ export const bundleBulkerABI = [
   {
     stateMutability: 'view',
     type: 'function',
-    inputs: [{ name: '', internalType: 'uint32', type: 'uint32' }],
-    name: 'idToInflator',
-    outputs: [{ name: '', internalType: 'address', type: 'address' }],
-  },
-  {
-    stateMutability: 'view',
-    type: 'function',
     inputs: [{ name: '', internalType: 'address', type: 'address' }],
     name: 'inflatorToID',
     outputs: [{ name: '', internalType: 'uint32', type: 'uint32' }],
@@ -83,7 +83,7 @@ export const bundleBulkerABI = [
 ] as const
 
 export const bundleBulkerAddress =
-  '0x2391d987C5aa54F5fCE4a1913D8e0E23fEFb237F' as const
+  '0x3Fde2701a9a5FC30b1F1916ec465A2F04BC7c05d' as const
 
 export const bundleBulkerConfig = {
   address: bundleBulkerAddress,
