@@ -8,8 +8,9 @@ import "account-abstraction/interfaces/IEntryPoint.sol";
 /// Inflates a bundle containing a single Daimo USDC transfer.
 /// This reduces calldata usage from ~1.5kb to ~400 bytes.
 contract DaimoTransferInflator is IInflator, Ownable {
-    address payable public beneficiary;
     address public coinAddr;
+    address payable public beneficiary;
+    address public paymaster;
 
     constructor(address _coinAddr) {
         coinAddr = _coinAddr;
@@ -19,14 +20,13 @@ contract DaimoTransferInflator is IInflator, Ownable {
         beneficiary = _beneficiary;
     }
 
+    function setPaymaster(address _paymaster) public onlyOwner {
+        paymaster = _paymaster;
+    }
+
     function inflate(
         bytes calldata compressed
-    ) 
-        external
-        override
-        view
-        returns (UserOperation[] memory, address payable)
-    {
+    ) external view override returns (UserOperation[] memory, address payable) {
         // Parse userop metadata
         UserOperation memory op;
         op.sender = address(uint160(bytes20(compressed[0:20])));
@@ -59,14 +59,7 @@ contract DaimoTransferInflator is IInflator, Ownable {
             bytes28(0) // padding
         );
 
-        // Add paymaster ticket signature for sponsored gas
-        bytes calldata paymasterSig = compressed[78:143]; // 65-byte signature
-        op.paymasterAndData = abi.encodePacked(
-            hex"6f0F82fAFac7B5D8C269B02d408F094bAC6CF877",
-            paymasterSig
-        );
-
-        // Finally, decompress WebAuthn signature
+        // Decompress WebAuthn signature
         bytes calldata compressedSig = compressed[143:];
 
         uint8 version = uint8(compressedSig[0]);
@@ -75,9 +68,9 @@ contract DaimoTransferInflator is IInflator, Ownable {
         uint8 keySlot = uint8(compressedSig[7]);
 
         Signature memory sig;
-        sig.authenticatorData = 
-            hex"00000000000000000000000000000000000000000000000000000000000000000500000000";
-        
+        sig
+            .authenticatorData = hex"00000000000000000000000000000000000000000000000000000000000000000500000000";
+
         sig.responseTypeLocation = 1;
         sig.challengeLocation = 23;
         sig.r = uint256(bytes32(compressedSig[8:40]));
@@ -86,12 +79,20 @@ contract DaimoTransferInflator is IInflator, Ownable {
         // Challenge is always 52 bytes: 39 bytes (1 byte version + 6 byte validUntil + 32 byte opHash) * 8/6 for Base64
         // We could save 20 bytes by passing just the opHash, but unclear if worth the extra complexity.
         bytes calldata challenge = compressedSig[72:];
-        sig.clientDataJSON = string(abi.encodePacked(
-            '{"type":"webauthn.get","challenge":"',
-            challenge,
-            '"}'
-        ));
+        sig.clientDataJSON = string(
+            abi.encodePacked(
+                '{"type":"webauthn.get","challenge":"',
+                challenge,
+                '"}'
+            )
+        );
 
+        // Finally, add the paymaster + ticket signature for sponsored gas
+        op.paymasterAndData = abi.encodePacked(
+            hex"6f0F82fAFac7B5D8C269B02d408F094bAC6CF877",
+            compressed[78:143], // 65-byte signature
+            validUntil
+        );
 
         op.signature = abi.encodePacked(
             version,
@@ -99,7 +100,6 @@ contract DaimoTransferInflator is IInflator, Ownable {
             keySlot,
             abi.encode(sig)
         );
-
 
         UserOperation[] memory ops = new UserOperation[](1);
         ops[0] = op;
