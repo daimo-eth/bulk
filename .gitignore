@@ -13,3 +13,7 @@ broadcast/*/*/*
 
 # Dotenv file
 .env
+
+# Typescript
+node_modules/
+dist/
