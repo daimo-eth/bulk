@@ -62,7 +62,7 @@ contract DaimoTransferInflator is IInflator, Ownable {
         // Add paymaster ticket signature for sponsored gas
         bytes calldata paymasterSig = compressed[78:143]; // 65-byte signature
         op.paymasterAndData = abi.encodePacked(
-            "0x6f0F82fAFac7B5D8C269B02d408F094bAC6CF877",
+            hex"6f0F82fAFac7B5D8C269B02d408F094bAC6CF877",
             paymasterSig
         );
 
@@ -75,20 +75,24 @@ contract DaimoTransferInflator is IInflator, Ownable {
         uint8 keySlot = uint8(compressedSig[7]);
 
         Signature memory sig;
-        sig
-            .authenticatorData = hex"00000000000000000000000000000000000000000000000000000000000000000500000000";
+        sig.authenticatorData = 
+            hex"00000000000000000000000000000000000000000000000000000000000000000500000000";
+        
+        sig.responseTypeLocation = 1;
+        sig.challengeLocation = 23;
+        sig.r = uint256(bytes32(compressedSig[8:40]));
+        sig.s = uint256(bytes32(compressedSig[40:72]));
+
         // Challenge is always 52 bytes: 39 bytes (1 byte version + 6 byte validUntil + 32 byte opHash) * 8/6 for Base64
         // We could save 20 bytes by passing just the opHash, but unclear if worth the extra complexity.
-        bytes calldata challenge = compressedSig[8:60];
+        bytes calldata challenge = compressedSig[72:];
         sig.clientDataJSON = string(abi.encodePacked(
             '{"type":"webauthn.get","challenge":"',
             challenge,
             '"}'
         ));
-        sig.responseTypeLocation = 1;
-        sig.challengeLocation = 23;
-        sig.r = uint256(bytes32(compressedSig[60:92]));
-        sig.s = uint256(bytes32(compressedSig[92:124]));
+
+
         op.signature = abi.encodePacked(
             version,
             validUntil,
