@@ -1,6 +1,6 @@
 {
   "name": "@daimo/bulk",
-  "version": "0.1.3",
+  "version": "0.1.4",
   "description": "Make compressed 4337 bundles swole again. Save calldata, save cost, ship cheap 4337 on L2.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
@@ -16,7 +16,7 @@
   "dependencies": {
     "@tsconfig/node20": "^20.1.2",
     "@wagmi/cli": "^1.5.2",
-    "typescript": "^5.3.3"
+    "typescript": "^5.0.0"
   },
   "publishConfig": {
     "access": "public"
