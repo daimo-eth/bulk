@@ -57,8 +57,10 @@ contract BundleBulkerTest is Test {
             address(0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913),
             alice
         );
-        vm.prank(alice);
+        vm.startPrank(alice);
         t.setBeneficiary(alice);
+        t.setPaymaster(address(0x6f0F82fAFac7B5D8C269B02d408F094bAC6CF877));
+        vm.stopPrank();
 
         bytes memory compressed = abi.encodePacked(
             hex"8bffa71a959af0b15c6eaa10d244d80bf23cb6a2", // sender
@@ -68,15 +70,22 @@ contract BundleBulkerTest is Test {
             hex"0000000f4240", // maxPriorityFeePerGas
             hex"a1b349c566c44769888948adc061abcdb54497f7", // to
             hex"0000000f4240", // amount
-            hex"99", // paymaster sig v
-            hex"7777777777777777777777777777777777777777777777777777777777777777", // paymaster sig r
-            hex"8888888888888888888888888888888888888888888888888888888888888888", // paymaster sig s
             hex"0100006553c75f00", // sig version, validUntil, keySlot
             hex"ce1a2a89ec9d3cecd1e9fd65808d85702d7f8681d42ce8f0982363a362b87bd5", // sig r
             hex"498c72f497f9d27ae895c6d2c10a73e85b73d258371d2322c80ca5bfad242f5f", // sig s
             hex"415141415A5650485830567A705463726D35665A6846505F566369545433584D57484832624E7A6A6435346531774E354D32696F" // authenticatorChallenge
+
+            // Below is OPTIONAL paymaster data. Most paymasters don't need this.
+            // Even sponsoring paymasters are possible without an extra signature with tricks.
+            hex"99", // paymaster sig v
+            hex"7777777777777777777777777777777777777777777777777777777777777777", // paymaster sig r
+            hex"8888888888888888888888888888888888888888888888888888888888888888", // paymaster sig s
+            hex"00006553c999" // paymaster ticket validUntil
         );
-        assertEq(compressed.length, 267);
+
+        // Length paymaster ticket sig: 273 bytes
+        // LENGTH WITH CORRECTLY OPTIMIZED PAYMASTER: 202 bytes
+        assertEq(compressed.length, 273);
 
         (UserOperation[] memory ops, address payable beneficiary) = t.inflate(
             compressed
@@ -119,7 +128,7 @@ contract BundleBulkerTest is Test {
             hex"99"
             hex"7777777777777777777777777777777777777777777777777777777777777777"
             hex"8888888888888888888888888888888888888888888888888888888888888888"
-            hex"00006553c75f"
+            hex"00006553c999"
         );
         assertEq(
             op.signature,

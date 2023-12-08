@@ -61,7 +61,7 @@ contract DaimoTransferInflator is IInflator, Ownable {
         );
 
         // Decompress WebAuthn signature
-        bytes calldata compressedSig = compressed[143:];
+        bytes calldata compressedSig = compressed[78:202];
 
         uint8 version = uint8(compressedSig[0]);
         require(version == 1, "Unsupported version");
@@ -87,19 +87,18 @@ contract DaimoTransferInflator is IInflator, Ownable {
                 '"}'
             )
         );
-
-        // Finally, add the paymaster + ticket signature for sponsored gas
-        op.paymasterAndData = abi.encodePacked(
-            hex"6f0F82fAFac7B5D8C269B02d408F094bAC6CF877",
-            compressed[78:143], // 65-byte signature
-            validUntil
-        );
-
         op.signature = abi.encodePacked(
             version,
             validUntil,
             keySlot,
             abi.encode(sig)
+        );
+
+
+        // Finally, add the paymaster + ticket signature for sponsored gas
+        op.paymasterAndData = abi.encodePacked(
+            paymaster,
+            compressed[202:] // paymaster data, if required
         );
 
         UserOperation[] memory ops = new UserOperation[](1);
