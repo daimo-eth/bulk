@@ -11,13 +11,13 @@ import "./IInflator.sol";
 contract BundleBulker {
     address public constant ENTRY_POINT = 0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789;
 
-    mapping(uint32 => address) public idToInflator;
-    mapping(address => uint32) public inflatorToID;
+    mapping(uint32 => IInflator) public idToInflator;
+    mapping(IInflator => uint32) public inflatorToID;
 
-    function registerInflator(uint32 inflatorId, address inflator) public {
+    function registerInflator(uint32 inflatorId, IInflator inflator) public {
         require(inflatorId != 0, "Inflator ID cannot be 0");
-        require(inflator != address(0), "Inflator address cannot be 0");
-        require(idToInflator[inflatorId] == address(0), "Inflator already registered");
+        require(address(inflator) != address(0), "Inflator address cannot be 0");
+        require(address(idToInflator[inflatorId]) == address(0), "Inflator already registered");
         require(inflatorToID[inflator] == 0, "Inflator already registered");
 
         idToInflator[inflatorId] = inflator;
@@ -26,9 +26,9 @@ contract BundleBulker {
 
     function inflate(bytes calldata compressed) public view returns (UserOperation[] memory ops, address payable beneficiary) {
         uint32 inflatorID = uint32(bytes4(compressed[0:4]));
-        address inflator = idToInflator[inflatorID];
-        require(inflator != address(0), "Inflator not registered");
-        return IInflator(inflator).inflate(compressed[4:]);
+        IInflator inflator = idToInflator[inflatorID];
+        require(address(inflator) != address(0), "Inflator not registered");
+        return inflator.inflate(compressed[4:]);
     }
 
     function submit(bytes calldata compressed) public {

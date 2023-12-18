@@ -16,30 +16,30 @@ contract BundleBulkerTest is Test {
     }
 
     function test_AddInflator() public {
-        address tango = address(0x123);
-        address foxtrot = address(0x234);
+        IInflator tango = IInflator(address(0x123));
+        IInflator foxtrot = IInflator(address(0x234));
 
         b.registerInflator(1, tango);
-        assertEq(b.idToInflator(1), tango);
+        assertEq(address(b.idToInflator(1)), address(tango));
         assertEq(b.inflatorToID(tango), 1);
 
         vm.expectRevert("Inflator ID cannot be 0");
         b.registerInflator(0, tango);
         vm.expectRevert("Inflator address cannot be 0");
-        b.registerInflator(2, address(0));
+        b.registerInflator(2, IInflator(address(0)));
         vm.expectRevert("Inflator already registered");
         b.registerInflator(1, foxtrot);
         vm.expectRevert("Inflator already registered");
         b.registerInflator(2, tango);
 
         b.registerInflator(2, foxtrot);
-        assertEq(b.idToInflator(2), foxtrot);
+        assertEq(address(b.idToInflator(2)), address(foxtrot));
         assertEq(b.inflatorToID(foxtrot), 2);
     }
 
     function test_Inflate() public {
         DummyInflator d = new DummyInflator();
-        b.registerInflator(77, address(d));
+        b.registerInflator(77, d);
 
         bytes memory compressed = abi.encodePacked(uint32(77), address(0x999));
         (UserOperation[] memory ops, address payable beneficiary) = b.inflate(
