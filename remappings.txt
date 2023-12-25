@@ -1,4 +1,5 @@
-account-abstraction/=lib/account-abstraction/contracts/
-@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/
-openzeppelin-contracts/=lib/openzeppelin-contracts/contracts/
 forge-std/=lib/forge-std/src/
+account-abstraction/=lib/account-abstraction/contracts/
+openzeppelin-contracts/=lib/openzeppelin-contracts/
+@openzeppelin/contracts/=lib/openzeppelin-contracts/contracts/
+p256-verifier/=lib/p256-verifier/src/

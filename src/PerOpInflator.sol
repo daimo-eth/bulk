@@ -3,7 +3,7 @@ pragma solidity >=0.8;
 
 import "./IInflator.sol";
 import "./IOpInflator.sol";
-import "openzeppelin-contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 import "account-abstraction/interfaces/IEntryPoint.sol";
 
 /// Inflates a bundle containing n ops, each with their own inflator specified.
