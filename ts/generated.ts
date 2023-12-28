@@ -221,7 +221,7 @@ export const daimoOpInflatorABI = [
 ] as const
 
 export const daimoOpInflatorAddress =
-  '0x15A197Fe4450C28610C3A54644E64B55b64396D7' as const
+  '0x9F73fFDeC7dC2625f19084D8811f353b184D3807' as const
 
 export const daimoOpInflatorConfig = {
   address: daimoOpInflatorAddress,
@@ -521,7 +521,7 @@ export const perOpInflatorABI = [
 ] as const
 
 export const perOpInflatorAddress =
-  '0x58440A7EC8630B41494E24B2cB3Cc5a74353e127' as const
+  '0x2c57b3B624d4FB12e65AF70105d4c905B31EAA8b' as const
 
 export const perOpInflatorConfig = {
   address: perOpInflatorAddress,
