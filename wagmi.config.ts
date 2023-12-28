@@ -23,7 +23,7 @@ export default defineConfig({
     foundry({
       project: ".",
       deployments,
-      include: ["BundleBulker.sol/*", "Daimo*.sol/*"],
+      include: ["BundleBulker.sol/*", "PerOpInflator.sol/*", "Daimo*.sol/*"],
     }),
   ],
 });

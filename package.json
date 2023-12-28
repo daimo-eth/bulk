@@ -1,6 +1,6 @@
 {
   "name": "@daimo/bulk",
-  "version": "0.2.0",
+  "version": "0.2.1",
   "description": "Make compressed 4337 bundles swole again. Save calldata, save cost, ship cheap 4337 on L2.",
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
