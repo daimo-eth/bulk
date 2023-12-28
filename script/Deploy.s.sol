@@ -3,7 +3,8 @@ pragma solidity ^0.8.13;
 
 import {Script, console2} from "forge-std/Script.sol";
 import "../src/BundleBulker.sol";
-import "../src/DaimoTransferInflator.sol";
+import "../src/PerOpInflator.sol";
+import "../src/DaimoOpInflator.sol";
 
 contract DeployScript is Script {
     function setUp() public {}
@@ -13,9 +14,16 @@ contract DeployScript is Script {
         new BundleBulker{salt:0}();
     }
 
-    function deployDaimoTransferInflator() public {
-        address tokenAddress;
+    function deployPerOpInflator() public {
+        vm.startBroadcast();
+
+        // Deploy PerOpInflator
         address payable beneficiary = payable(0x2A6d311394184EeB6Df8FBBF58626B085374Ffe7);
+        PerOpInflator pi = new PerOpInflator{salt:0}(msg.sender);
+        pi.setBeneficiary(beneficiary);
+
+        // Deploy DaimoOpInflator
+        address tokenAddress;
         address paymaster;
         if (block.chainid == 8453) {
             tokenAddress = 0x833589fCD6eDb6E08f4c7C32D4f71b54bdA02913; // Base USDC
@@ -27,10 +35,12 @@ contract DeployScript is Script {
             revert("Unsupported chain");
         }
 
-        vm.startBroadcast();
-        DaimoTransferInflator i = new DaimoTransferInflator{salt:0}(tokenAddress, msg.sender);
-        i.setBeneficiary(beneficiary);
+        DaimoOpInflator i = new DaimoOpInflator{salt:0}(tokenAddress, msg.sender);
         i.setPaymaster(paymaster);
+
+        // Register DaimoOpInflator
+        pi.registerOpInflator(1, i);
+
         vm.stopBroadcast();
     }
 }
