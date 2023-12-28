@@ -15,7 +15,7 @@ interface INameReg {
 contract DaimoOpInflator is IOpInflator, Ownable {
     address public coinAddr;
     address public paymaster;
-    INameReg public nameReg = INameReg(0x72bA7d8E73Fe8Eb666Ea66babC8116a41bFb10e2);
+    INameReg public nameReg = INameReg(0x4430A644B215a187a3daa5b114fA3f3d9DeBc17D);
     address public entryPoint = 0x5FF137D4b0FDCD49DcA30c7CF57E578a026d2789;
 
     constructor(address _coinAddr, address _owner) {

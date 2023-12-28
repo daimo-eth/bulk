@@ -34,7 +34,7 @@ contract PerOpInflator is IInflator, Ownable {
     function inflate(
         bytes calldata compressed
     ) external view override returns (UserOperation[] memory, address payable) {
-        uint256 numOps = uint256(uint16(bytes2(compressed[0:1])));
+        uint256 numOps = uint256(uint8(bytes1(compressed[0:1])));
         UserOperation[] memory ops = new UserOperation[](numOps);
         uint256 offset = 1;
         for (uint256 i = 0; i < numOps; i++) {

@@ -4,7 +4,6 @@ pragma solidity ^0.8.13;
 import {Test, console2} from "forge-std/Test.sol";
 import {UserOperation} from "account-abstraction/interfaces/IEntryPoint.sol";
 
-import {BundleBulker} from "../src/BundleBulker.sol";
 import {IInflator} from "../src/IInflator.sol";
 import {DaimoOpInflator} from "../src/DaimoOpInflator.sol";
 
@@ -24,7 +23,7 @@ contract DummyNameReg {
 contract DaimoOpInflatorTest is Test {
     function setUp() public {
         DummyNameReg nameReg = new DummyNameReg();
-        vm.etch(address(0x72bA7d8E73Fe8Eb666Ea66babC8116a41bFb10e2), address(nameReg).code);
+        vm.etch(address(0x4430A644B215a187a3daa5b114fA3f3d9DeBc17D), address(nameReg).code);
         vm.chainId(8453);
     }
 

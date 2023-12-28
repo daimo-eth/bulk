@@ -19,9 +19,13 @@ contract DeployScript is Script {
 
         // Deploy PerOpInflator
         address payable beneficiary = payable(0x2A6d311394184EeB6Df8FBBF58626B085374Ffe7);
-        PerOpInflator pi = new PerOpInflator{salt:"01"}(msg.sender);
+        PerOpInflator pi = new PerOpInflator{salt:0}(msg.sender);
         pi.setBeneficiary(beneficiary);
+        vm.stopBroadcast();
+    }
 
+    function deployDaimoOpInflator() public {
+        vm.startBroadcast();
         // Deploy DaimoOpInflator
         address tokenAddress;
         address paymaster;
@@ -35,11 +39,8 @@ contract DeployScript is Script {
             revert("Unsupported chain");
         }
 
-        DaimoOpInflator i = new DaimoOpInflator{salt:"01"}(tokenAddress, msg.sender);
+        DaimoOpInflator i = new DaimoOpInflator{salt:0}(tokenAddress, msg.sender);
         i.setPaymaster(paymaster);
-
-        // Register DaimoOpInflator
-        pi.registerOpInflator(1, i);
 
         vm.stopBroadcast();
     }
