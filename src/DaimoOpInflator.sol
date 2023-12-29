@@ -11,7 +11,8 @@ interface INameReg {
 }
 
 /// Inflates an op containing a Daimo ERC20 transfer.
-/// This reduces calldata usage from ~1.5kb to ~400 bytes.
+/// Compression reduces userop data by 80%+ from ~800 bytes to ~125 bytes.
+/// Singleton bundle tx goes from ~1600 bytes to ~340 bytes.
 contract DaimoOpInflator is IOpInflator, Ownable {
     address public coinAddr;
     address public paymaster;
