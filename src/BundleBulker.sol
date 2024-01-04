@@ -16,6 +16,10 @@ contract BundleBulker {
 
     function registerInflator(uint32 inflatorId, IInflator inflator) public {
         require(inflatorId != 0, "Inflator ID cannot be 0");
+        require(
+            bytes4(inflatorId) != this.registerInflator.selector && bytes4(inflatorId) != this.inflate.selector,
+            "Inflator ID cannot clash with other functions"
+        );
         require(address(inflator) != address(0), "Inflator address cannot be 0");
         require(address(idToInflator[inflatorId]) == address(0), "Inflator already registered");
         require(inflatorToID[inflator] == 0, "Inflator already registered");
@@ -31,8 +35,8 @@ contract BundleBulker {
         return inflator.inflate(compressed[4:]);
     }
 
-    function submit(bytes calldata compressed) public {
-        (UserOperation[] memory ops, address payable beneficiary) = inflate(compressed);
+    fallback() external {
+        (UserOperation[] memory ops, address payable beneficiary) = inflate(msg.data);
         IEntryPoint(ENTRY_POINT).handleOps(ops, beneficiary);
     }
 }
