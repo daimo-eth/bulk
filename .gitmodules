@@ -10,3 +10,6 @@
 [submodule "lib/p256-verifier"]
 	path = lib/p256-verifier
 	url = https://github.com/daimo-eth/p256-verifier
+[submodule "lib/inflate-sol"]
+	path = lib/inflate-sol
+	url = https://github.com/adlerjohn/inflate-sol
