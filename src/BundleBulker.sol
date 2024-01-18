@@ -14,6 +14,8 @@ contract BundleBulker {
     mapping(uint32 => IInflator) public idToInflator;
     mapping(IInflator => uint32) public inflatorToID;
 
+    event InflatorRegistered(uint32 id, IInflator inflator);
+
     function registerInflator(uint32 inflatorId, IInflator inflator) public {
         require(inflatorId != 0, "Inflator ID cannot be 0");
         require(
@@ -26,6 +28,8 @@ contract BundleBulker {
 
         idToInflator[inflatorId] = inflator;
         inflatorToID[inflator] = inflatorId;
+
+        emit InflatorRegistered(inflatorId, inflator);
     }
 
     function inflate(bytes calldata compressed) public view returns (UserOperation[] memory ops, address payable beneficiary) {

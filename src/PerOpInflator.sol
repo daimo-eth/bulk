@@ -13,6 +13,8 @@ contract PerOpInflator is IInflator, Ownable {
     mapping(uint32 => IOpInflator) public idToInflator;
     mapping(IOpInflator => uint32) public inflatorToID;
 
+    event OpInflatorRegistered(uint32 id, IOpInflator inflator);
+
     function registerOpInflator(uint32 inflatorId, IOpInflator inflator) public {
         require(inflatorId != 0, "Inflator ID cannot be 0");
         require(address(inflator) != address(0), "Inflator address cannot be 0");
@@ -21,6 +23,8 @@ contract PerOpInflator is IInflator, Ownable {
 
         idToInflator[inflatorId] = inflator;
         inflatorToID[inflator] = inflatorId;
+
+        emit OpInflatorRegistered(inflatorId, inflator);
     }
 
     constructor(address _owner) {
