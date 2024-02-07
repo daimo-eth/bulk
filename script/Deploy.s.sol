@@ -11,7 +11,7 @@ contract DeployScript is Script {
 
     function deploy() public {
         vm.broadcast();
-        new BundleBulker{salt:0}();
+        new BundleBulker{salt:0x7cf7a0f0060e1519d0ee3e12e0ee57890f69d7aa693404299a3a779e90cd7921}();
     }
 
     function deployPerOpInflator() public {
@@ -35,6 +35,9 @@ contract DeployScript is Script {
         } else if (block.chainid == 84531){
             tokenAddress = 0x1B85deDe8178E18CdE599B4C9d913534553C3dBf; // Base Goerli testUSDC
             paymaster = 0x13f490FafBb206440F25760A10C21A6220017fFa; // Pimlico ERC20 paymaster
+        } else if (block.chainid == 84532){
+            tokenAddress = 0xbd22e0DB611b6104ac31799408eD131B1f8383f0; // Base Sepolia testUSDC
+            paymaster = 0xa9E1CCB08053e4f5daBb506718352389C1547462; // DaimoPaymasterV2
         } else {
             revert("Unsupported chain");
         }

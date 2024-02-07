@@ -9,7 +9,7 @@ import {DaimoOpInflator} from "../src/DaimoOpInflator.sol";
 
 
 contract DummyNameReg {
-    function resolveAddr(bytes32 name) external view returns (address) {
+    function resolveAddr(bytes32 name) external pure returns (address) {
         if (name== bytes32(bytes("bob"))) {
             return address(0x8bFfa71A959AF0b15C6eaa10d244d80BF23cb6A2);
         } else if (name == bytes32(bytes("blob"))) {
