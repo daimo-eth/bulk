@@ -36,7 +36,7 @@ contract DeployScript is Script {
             tokenAddress = 0x1B85deDe8178E18CdE599B4C9d913534553C3dBf; // Base Goerli testUSDC
             paymaster = 0x13f490FafBb206440F25760A10C21A6220017fFa; // Pimlico ERC20 paymaster
         } else if (block.chainid == 84532){
-            tokenAddress = 0xbd22e0DB611b6104ac31799408eD131B1f8383f0; // Base Sepolia testUSDC
+            tokenAddress = 0x036CbD53842c5426634e7929541eC2318f3dCF7e; // Base Sepolia Circle USDC
             paymaster = 0xa9E1CCB08053e4f5daBb506718352389C1547462; // DaimoPaymasterV2
         } else {
             revert("Unsupported chain");

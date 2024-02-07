@@ -3,6 +3,7 @@
 //////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 export const bundleBulkerABI = [
+  { stateMutability: 'nonpayable', type: 'fallback' },
   {
     stateMutability: 'view',
     type: 'function',
@@ -76,16 +77,23 @@ export const bundleBulkerABI = [
     outputs: [],
   },
   {
-    stateMutability: 'nonpayable',
-    type: 'function',
-    inputs: [{ name: 'compressed', internalType: 'bytes', type: 'bytes' }],
-    name: 'submit',
-    outputs: [],
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'id', internalType: 'uint32', type: 'uint32', indexed: false },
+      {
+        name: 'inflator',
+        internalType: 'contract IInflator',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'InflatorRegistered',
   },
 ] as const
 
 export const bundleBulkerAddress =
-  '0x3Fde2701a9a5FC30b1F1916ec465A2F04BC7c05d' as const
+  '0x000000000091A1F34f51CE866bEd8983dB51a97E' as const
 
 export const bundleBulkerConfig = {
   address: bundleBulkerAddress,
@@ -490,6 +498,20 @@ export const perOpInflatorABI = [
     inputs: [{ name: 'newOwner', internalType: 'address', type: 'address' }],
     name: 'transferOwnership',
     outputs: [],
+  },
+  {
+    type: 'event',
+    anonymous: false,
+    inputs: [
+      { name: 'id', internalType: 'uint32', type: 'uint32', indexed: false },
+      {
+        name: 'inflator',
+        internalType: 'contract IOpInflator',
+        type: 'address',
+        indexed: false,
+      },
+    ],
+    name: 'OpInflatorRegistered',
   },
   {
     type: 'event',
