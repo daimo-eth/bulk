@@ -5,7 +5,7 @@
   "main": "dist/index.js",
   "types": "dist/index.d.ts",
   "scripts": {
-    "test": "forge test -vv",
+    "test": "forge test -vv --ffi",
     "build": "tsc",
     "codegen": "wagmi generate"
   },
@@ -16,6 +16,7 @@
   "dependencies": {
     "@tsconfig/node20": "^20.1.2",
     "@wagmi/cli": "^1.5.2",
+    "pako": "^2.1.0",
     "typescript": "^5.0.0"
   },
   "publishConfig": {
